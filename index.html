@@ -1,0 +1,591 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>VancoAUC Beira-Leito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EEF2F0; --surface:#FFFFFF; --surface-2:#F6F8F7; --ink:#15211E; --muted:#56655F; --line:#D3DCD8;
+  --accent:#0B6B5E; --accent-ink:#FFFFFF; --accent-soft:#D9ECE7;
+  --peak:#B4532A; --trough:#2F5E9E;
+  --ok:#2E7D4B; --ok-soft:#DDF0E2; --warn:#A8700F; --warn-soft:#F7EBCF; --bad:#B03A2E; --bad-soft:#F6DEDA;
+  --shadow:0 1px 2px rgba(21,33,30,.06),0 4px 14px rgba(21,33,30,.05);
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1614; --surface:#17211E; --surface-2:#1C2824; --ink:#E4ECE9; --muted:#9AABA4; --line:#2C3A35;
+    --accent:#3FB5A2; --accent-ink:#06201B; --accent-soft:#173A33;
+    --peak:#E58A5E; --trough:#7FA8E3;
+    --ok:#6CC58C; --ok-soft:#18321F; --warn:#E3B04F; --warn-soft:#3A2E14; --bad:#EE7E71; --bad-soft:#3D1D19;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1614; --surface:#17211E; --surface-2:#1C2824; --ink:#E4ECE9; --muted:#9AABA4; --line:#2C3A35;
+  --accent:#3FB5A2; --accent-ink:#06201B; --accent-soft:#173A33;
+  --peak:#E58A5E; --trough:#7FA8E3;
+  --ok:#6CC58C; --ok-soft:#18321F; --warn:#E3B04F; --warn-soft:#3A2E14; --bad:#EE7E71; --bad-soft:#3D1D19;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:14px 40px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 20px;padding-block:6px 14px;border-bottom:1px solid var(--line)}
+.brand h1{font-family:var(--display);font-weight:700;font-size:1.65rem;letter-spacing:.01em;margin:0;line-height:1.1}
+.brand h1 span{color:var(--accent)}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.86rem}
+.target-box{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
+.target-box input{width:78px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:12px 4px;scrollbar-width:none}
+nav.tabs button{font-family:var(--display);font-weight:600;font-size:.98rem;letter-spacing:.02em;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;margin-top:12px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.panel h2{font-family:var(--display);font-size:1.12rem;font-weight:600;margin:0 0 10px;letter-spacing:.01em;text-wrap:balance}
+.panel h3{font-family:var(--display);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:16px 0 8px}
+.panel h3:first-of-type{margin-top:4px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.fields.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:460px){.fields.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f.full{grid-column:1/-1}
+label{font-size:.8rem;color:var(--muted);font-weight:500}
+input,select{font:inherit;font-family:var(--mono);font-size:.95rem;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:8px 9px;width:100%;min-width:0}
+input[type="datetime-local"]{font-size:.86rem;padding:7px 6px}
+.check{display:flex;align-items:flex-start;gap:8px;font-size:.88rem;color:var(--ink)}
+.check input{width:auto;margin-top:3px}
+.f.check{flex-direction:row}
+.hint{font-size:.8rem;color:var(--muted);margin:6px 0 0}
+.peak-l{color:var(--peak);font-weight:600}.trough-l{color:var(--trough);font-weight:600}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{font-family:var(--display);font-weight:600;font-size:.95rem;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:9px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.example-tag{display:inline-block;font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:14px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line)}
+.hero .num{font-family:var(--mono);font-weight:500;font-size:2.3rem;line-height:1;font-variant-numeric:tabular-nums}
+.hero .unit{font-size:.8rem;color:var(--muted)}
+.hero .lab{font-family:var(--display);font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:.9rem;padding:4px 10px;border-radius:999px}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:12px}
+.kv div{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.kv dt{font-size:.74rem;color:var(--muted)}
+.kv dd{margin:2px 0 0;font-family:var(--mono);font-size:1.02rem;font-variant-numeric:tabular-nums}
+.rec{margin-top:14px;border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0}
+.rec.bad{border-color:var(--bad);background:var(--bad-soft)}.rec.warn{border-color:var(--warn);background:var(--warn-soft)}
+.rec strong.big{display:block;font-family:var(--display);font-size:1.3rem;font-weight:700;margin:2px 0 4px}
+.rec p{margin:4px 0}
+.alerts{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.alert{font-size:.86rem;padding:8px 10px;border-radius:7px;background:var(--warn-soft);color:var(--ink);border:1px solid var(--line)}
+.alert.err{background:var(--bad-soft)}
+.tbl-wrap{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--display);font-weight:600;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.sel td{background:var(--accent-soft)}
+.chart{margin-top:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:6px}
+.chart svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.78rem;color:var(--muted);padding:4px 6px 2px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.sched{font-family:var(--mono);font-size:.88rem;line-height:1.7;margin:6px 0 0;padding-left:18px}
+.copybox{width:100%;min-height:120px;font-family:var(--mono);font-size:.8rem;margin-top:8px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:8px}
+footer{margin-top:22px;font-size:.8rem;color:var(--muted);max-width:75ch}
+footer a{color:var(--accent)}
+.tabpane[hidden]{display:none!important}
+.tag-flag{display:inline-block;font-size:.76rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);margin:2px 4px 0 0}
+@media (prefers-reduced-motion:no-preference){.hero .num{transition:color .2s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Vanco<span>AUC</span> beira-leito</h1>
+      <p>UTI Adulto · Hospital Promater · ajuste de vancomicina por AUC24 com pico e vale</p>
+    </div>
+    <div class="target-box">
+      <label for="target">AUC24-alvo (mg·h/L)</label>
+      <input id="target" type="number" min="400" max="600" step="10" value="480" inputmode="numeric">
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Etapas">
+    <button role="tab" aria-selected="true" data-tab="t1" id="tab-t1">1 · Início</button>
+    <button role="tab" aria-selected="false" data-tab="t2" id="tab-t2">2 · Pico e vale</button>
+    <button role="tab" aria-selected="false" data-tab="t3" id="tab-t3">3 · Infusão contínua</button>
+    <button role="tab" aria-selected="false" data-tab="t4" id="tab-t4">4 · Hemodiálise</button>
+  </nav>
+
+  <!-- Patient panel shared -->
+  <div class="grid">
+    <section class="panel" aria-labelledby="pt-h">
+      <h2 id="pt-h">Paciente <span class="example-tag" id="exTag">Exemplo</span></h2>
+      <div class="fields three">
+        <div class="f"><label for="age">Idade (anos)</label><input id="age" type="number" inputmode="numeric" value="58"></div>
+        <div class="f"><label for="sex">Sexo</label><select id="sex"><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
+        <div class="f"><label for="wt">Peso real (kg)</label><input id="wt" type="number" inputmode="decimal" step="0.1" value="72"></div>
+        <div class="f"><label for="ht">Altura (cm)</label><input id="ht" type="number" inputmode="numeric" value="170"></div>
+        <div class="f"><label for="scr">Creatinina (mg/dL)</label><input id="scr" type="number" inputmode="decimal" step="0.01" value="1.1"></div>
+        <div class="f"><label for="clm">ClCr medido (opcional)</label><input id="clm" type="number" inputmode="decimal" placeholder="mL/min"></div>
+      </div>
+      <div class="kv" id="ptOut"></div>
+      <div id="ptFlags" style="margin-top:8px"></div>
+      <div class="btnrow">
+        <button class="btn ghost" id="clearBtn" type="button">Limpar exemplo</button>
+      </div>
+
+      <!-- Tab-specific inputs -->
+      <div class="tabpane" id="in-t1">
+        <h3>Primeira dose</h3>
+        <div class="fields">
+          <div class="f full"><label for="ldTime">Horário previsto do ataque</label><input id="ldTime" type="datetime-local"></div>
+        </div>
+        <p class="hint">Gera o aprazamento das doses e das coletas de pico e vale.</p>
+      </div>
+
+      <div class="tabpane" id="in-t2" hidden>
+        <h3>Regime em uso</h3>
+        <div class="fields three">
+          <div class="f"><label for="mDose">Dose (mg)</label><input id="mDose" type="number" step="250" value="1000"></div>
+          <div class="f"><label for="mTau">Intervalo (h)</label><select id="mTau"><option>8</option><option selected>12</option><option>24</option><option>48</option></select></div>
+          <div class="f"><label for="mTinf">Infusão (min)</label><input id="mTinf" type="number" step="15" value="60"></div>
+          <div class="f full"><label for="monStart">Início da dose monitorada (a dose antes do pico)</label><input id="monStart" type="datetime-local"></div>
+          <div class="f"><label for="nPrev">Doses de manutenção antes dela</label><input id="nPrev" type="number" min="0" value="2"></div>
+          <div class="f full check"><input id="steady" type="checkbox"><label for="steady" style="color:var(--ink);font-size:.88rem">Estado de equilíbrio: ≥4 doses iguais sem mudança de regime (dispensa o histórico)</label></div>
+        </div>
+        <h3>Dose de ataque</h3>
+        <div class="fields three">
+          <div class="f"><label for="ldDose">Dose (mg, 0 se não houve)</label><input id="ldDose" type="number" step="250" value="1750"></div>
+          <div class="f"><label for="ldTinf">Infusão (min)</label><input id="ldTinf" type="number" step="15" value="120"></div>
+          <div class="f full"><label for="ldStart">Início do ataque</label><input id="ldStart" type="datetime-local"></div>
+        </div>
+        <h3>Níveis séricos</h3>
+        <div class="fields">
+          <div class="f"><label for="c1" class="peak-l">Pico (mg/L)</label><input id="c1" type="number" step="0.1" value="33.8"></div>
+          <div class="f"><label for="t1">Horário da coleta do pico</label><input id="t1" type="datetime-local"></div>
+          <div class="f"><label for="c2" class="trough-l">Vale (mg/L)</label><input id="c2" type="number" step="0.1" value="18.9"></div>
+          <div class="f"><label for="t2">Horário da coleta do vale</label><input id="t2" type="datetime-local"></div>
+        </div>
+        <div class="f full check" style="margin-top:10px"><input id="aki" type="checkbox"><label for="aki" style="color:var(--ink);font-size:.88rem">LRA nova ou creatinina subindo desde as coletas</label></div>
+        <p class="hint">Pico 1–2 h após o <b>fim</b> da infusão; vale até 30 min antes da dose seguinte, no mesmo intervalo. Use os horários reais registrados pela enfermagem.</p>
+      </div>
+
+      <div class="tabpane" id="in-t3" hidden>
+        <h3>Situação</h3>
+        <div class="fields">
+          <div class="f"><label for="ciInd">Indicação</label><select id="ciInd"><option value="crrt">CRRT</option><option value="arc">Hiperfiltração (ARC)</option><option value="other">Outra</option></select></div>
+          <div class="f"><label for="eff">Efluente CRRT (mL/kg/h)</label><input id="eff" type="number" step="1" value="25"></div>
+          <div class="f"><label for="ciConc">Concentração da solução (mg/mL)</label><input id="ciConc" type="number" step="0.5" value="5"></div>
+        </div>
+        <h3>Ajuste pelo nível em platô</h3>
+        <div class="fields">
+          <div class="f"><label for="ciDaily">Dose diária atual (mg/24 h)</label><input id="ciDaily" type="number" step="250" value="1500"></div>
+          <div class="f"><label for="ciCss">Css medida (mg/L)</label><input id="ciCss" type="number" step="0.1" value="15.2"></div>
+          <div class="f"><label for="ciHours">Horas desde o início da infusão</label><input id="ciHours" type="number" step="1" value="24"></div>
+          <div class="f"><label for="ciLd">Ataque dado antes da infusão (mg)</label><input id="ciLd" type="number" step="250" value="1750"></div>
+        </div>
+        <p class="hint">Deixe a Css em branco para ver só a dose inicial. Alvo de Css = AUC-alvo ÷ 24. A primeira Css deve ser colhida com ≥24 h de infusão.</p>
+      </div>
+
+      <div class="tabpane" id="in-t4" hidden>
+        <h3>Hemodiálise intermitente</h3>
+        <div class="fields">
+          <div class="f"><label for="hdGap">Intervalo até a próxima sessão</label><select id="hdGap"><option value="48">48 h</option><option value="72">72 h</option></select></div>
+          <div class="f"><label for="hdCur">Dose de manutenção atual (mg, 0 se nenhuma)</label><input id="hdCur" type="number" step="250" value="750"></div>
+          <div class="f"><label for="hdLevel">Nível pré-diálise (mg/L)</label><input id="hdLevel" type="number" step="0.1" value="12.4"></div>
+        </div>
+        <p class="hint">Dose na última hora da sessão ou logo após. Deixe o nível em branco para ver só ataque e manutenção inicial.</p>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="panel" aria-live="polite">
+      <div class="tabpane" id="out-t1"></div>
+      <div class="tabpane" id="out-t2" hidden></div>
+      <div class="tabpane" id="out-t3" hidden></div>
+      <div class="tabpane" id="out-t4" hidden></div>
+      <h3 style="margin-top:18px">Resumo para o prontuário</h3>
+      <textarea class="copybox" id="summary" readonly aria-label="Resumo para o prontuário"></textarea>
+      <div class="btnrow"><button class="btn" id="copyBtn" type="button">Copiar resumo</button><span class="hint" id="copyMsg" style="align-self:center"></span></div>
+    </section>
+  </div>
+
+  <footer>
+    <p><b>Ferramenta de apoio à decisão.</b> Não substitui o julgamento clínico nem a revisão do farmacêutico clínico. Modelo monocompartimental de primeira ordem; supõe função renal estável entre as coletas. Dose empírica inicial pela equação de Matzke (1984); alvo AUC24 400–600 (ASHP/IDSA 2020), alvo de ajuste 480 conforme o POP. Regras de hemodiálise, CRRT e infusão contínua são operacionais do POP, com evidência baixa. Nenhum dado é salvo ou enviado.</p>
+    <p>Protocolo e revisão bibliográfica: <a href="https://claude.ai/code/artifact/13e8e3d8-bf09-495d-8d8c-3baf4ae0ee6e" target="_blank" rel="noopener">POP Vancomicina — UTI Adulto Promater</a>.</p>
+  </footer>
+</div>
+
+<script>
+// ===== PK engine (one-compartment, linear, zero-order infusion, superposition) =====
+const VE=(()=>{
+  const round=(x,s)=>Math.round(x/s)*s;
+  const ibw=(sex,h)=>(sex==='M'?50:45.5)+2.3*(h/2.54-60);
+  const bmi=(w,h)=>w/Math.pow(h/100,2);
+  function cgWeight(sex,w,h){const i=ibw(sex,h);if(w<i)return{w,kind:'real'};if(bmi(w,h)>=30)return{w:i+0.4*(w-i),kind:'ajustado'};return{w:i,kind:'ideal'};}
+  function cockcroftGault(age,sex,w,h,scr){const cw=cgWeight(sex,w,h);let c=((140-age)*cw.w)/(72*scr);if(sex==='F')c*=0.85;return{clcr:c,weightUsed:cw.w,weightKind:cw.kind};}
+  const popCL=clcr=>(3.66+0.689*clcr)*0.06; // L/h (Matzke 1984)
+  const popV=(w,h)=>bmi(w,h)>=40?0.52*w:0.7*w;
+  function infusionTime(d){if(d<=1000)return 60;return Math.ceil(d/15/30)*30;} // >=60 min e <=15 mg/min
+  function loadingDose(w,mgkg=25,cap=3000){const raw=w*mgkg;const d=Math.min(round(raw,250),cap);return{dose:d,tinfMin:infusionTime(d),capped:raw>cap+125};}
+  function ss(dose,tau,tinf,ke,V){const k0=dose/tinf;const cmax=(k0*(1-Math.exp(-ke*tinf)))/(ke*V*(1-Math.exp(-ke*tau)));const cmin=cmax*Math.exp(-ke*(tau-tinf));return{cmax,cmin,auc24:(dose*24/tau)/(ke*V)};}
+  function chooseTau(ke){const th=Math.log(2)/ke;if(th<5)return 8;if(th<10)return 12;if(th<20)return 24;if(th<36)return 48;return null;}
+  function regimen(target,ke,V,tau,maxDaily=4500){const CL=ke*V;let dose=round(target*CL*tau/24,250);if(dose<250)dose=250;let capped=false;if(dose>3000){dose=3000;capped=true;}if(dose*24/tau>maxDaily){dose=Math.floor(maxDaily*tau/24/250)*250;capped=true;}const tinf=infusionTime(dose)/60;return{dose,tau,tinf,capped,...ss(dose,tau,tinf,ke,V)};}
+  function unitConc(D,s,tinf,ke,t){if(t<=s)return 0;const k0=D/tinf;if(t<=s+tinf)return(k0/ke)*(1-Math.exp(-ke*(t-s)));return(k0/ke)*(1-Math.exp(-ke*tinf))*Math.exp(-ke*(t-s-tinf));}
+  const concAt=(doses,ke,V,t)=>doses.reduce((a,d)=>a+unitConc(d.D,d.s,d.tinf,ke,t),0)/V;
+  function twoLevel({doses,c1,t1,c2,t2}){
+    const warn=[];
+    if(!(c1>0&&c2>0))throw new Error('Informe o pico e o vale.');
+    if(t2<=t1)throw new Error('O vale precisa ter sido colhido depois do pico, no mesmo intervalo. Confira os horários.');
+    if(c2>=c1)throw new Error('O vale está maior ou igual ao pico. Confira valores, horários e se as amostras não foram trocadas.');
+    if(doses.some(d=>d.s>t1&&d.s<t2))throw new Error('Há uma dose iniciada entre o pico e o vale. As duas coletas devem estar no mesmo intervalo.');
+    if(doses.some(d=>t1>=d.s&&t1<d.s+d.tinf))throw new Error('O pico foi colhido durante a infusão. Colha 1–2 h após o fim da infusão.');
+    const last=doses.filter(d=>d.s<=t1).sort((a,b)=>b.s-a.s)[0];
+    if(!last)throw new Error('Nenhuma dose registrada antes do pico. Confira o horário da dose monitorada.');
+    const sinceEnd=t1-(last.s+last.tinf);
+    if(sinceEnd<0.98)warn.push('Pico colhido menos de 1 h após o fim da infusão: a fase de distribuição superestima pico e AUC.');
+    if(sinceEnd>2.25)warn.push('Pico colhido fora da janela de 1–2 h após o fim da infusão: menor precisão da estimativa.');
+    const ke=Math.log(c1/c2)/(t2-t1);
+    const V=doses.reduce((a,d)=>a+unitConc(d.D,d.s,d.tinf,ke,t1),0)/c1;
+    const th=Math.log(2)/ke;
+    if(th>72)warn.push('Meia-vida acima de 72 h: função renal muito reduzida. Prefira redosar por nível a usar a AUC extrapolada.');
+    if(V<10||V>300)warn.push('Volume de distribuição calculado implausível ('+V.toFixed(0)+' L). Confira doses, horários e histórico.');
+    return{ke,th,V,CL:ke*V,last,sinceEnd,warn};
+  }
+  function buildDoses({monStart,dose,tau,tinf,nPrev,steady,ldDose,ldStart,ldTinf}){
+    const arr=[];const n=steady?60:Math.max(0,nPrev|0);
+    for(let k=n;k>=1;k--)arr.push({D:dose,s:monStart-k*tau,tinf,kind:'m'});
+    arr.push({D:dose,s:monStart,tinf,kind:'mon'});
+    if(!steady&&ldDose>0&&isFinite(ldStart))arr.push({D:ldDose,s:ldStart,tinf:ldTinf,kind:'ld'});
+    return arr.sort((a,b)=>a.s-b.s);
+  }
+  return{round,ibw,bmi,cockcroftGault,popCL,popV,infusionTime,loadingDose,ss,chooseTau,regimen,unitConc,concAt,twoLevel,buildDoses};
+})();
+
+// ===== helpers =====
+const $=id=>document.getElementById(id);
+const num=id=>{const v=parseFloat(String($(id).value).replace(',','.'));return isFinite(v)?v:NaN;};
+const fmt=(x,d=0)=>isFinite(x)?x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const mg=x=>fmt(x,0)+' mg';
+const pad=n=>String(n).padStart(2,'0');
+const toLocalInput=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const parseDT=id=>{const v=$(id).value;if(!v)return NaN;const d=new Date(v);return isNaN(d)?NaN:d.getTime();};
+const H=3600e3;
+const clock=ms=>{const d=new Date(ms);return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;};
+const target=()=>{const t=num('target');return isFinite(t)&&t>=400&&t<=600?t:480;};
+function statusOf(auc){if(auc<400)return{cls:'warn',txt:'Abaixo do alvo'};if(auc<=600)return{cls:'ok',txt:'No alvo 400–600'};if(auc<=700)return{cls:'warn',txt:'Acima do alvo'};return{cls:'bad',txt:'Exposição alta'};}
+const tauTxt=t=>`a cada ${t} h`;
+
+// ===== example defaults =====
+function setExampleTimes(){
+  const now=Date.now();const b=now-(now%(30*60e3))-48*H;
+  $('ldTime').value=toLocalInput(new Date(Date.now()+30*60e3-(Date.now()%(30*60e3))));
+  $('ldStart').value=toLocalInput(new Date(b));
+  $('monStart').value=toLocalInput(new Date(b+36*H));
+  $('t1').value=toLocalInput(new Date(b+38*H));
+  $('t2').value=toLocalInput(new Date(b+47.5*H));
+}
+setExampleTimes();
+
+// ===== patient =====
+function patient(){
+  const p={age:num('age'),sex:$('sex').value,w:num('wt'),h:num('ht'),scr:num('scr'),clm:num('clm')};
+  p.ok=[p.age,p.w,p.h,p.scr].every(isFinite)&&p.w>20&&p.h>100&&p.scr>0;
+  if(!p.ok)return p;
+  p.ibw=VE.ibw(p.sex,p.h);p.bmi=VE.bmi(p.w,p.h);
+  p.cg=VE.cockcroftGault(p.age,p.sex,p.w,p.h,p.scr);
+  p.clcr=isFinite(p.clm)&&p.clm>0?p.clm:p.cg.clcr;p.clSrc=isFinite(p.clm)&&p.clm>0?'medido':'Cockcroft-Gault';
+  p.obese=p.bmi>=30;p.arc=p.clcr>=130;p.low=p.clcr<25;
+  return p;
+}
+function renderPatient(p){
+  if(!p.ok){$('ptOut').innerHTML='';$('ptFlags').innerHTML='<div class="alert err">Preencha idade, peso, altura e creatinina.</div>';return;}
+  $('ptOut').innerHTML=`
+    <div><dt>ClCr (${p.clSrc})</dt><dd>${fmt(p.clcr)} mL/min</dd></div>
+    <div><dt>Peso usado no CG</dt><dd>${fmt(p.cg.weightUsed,1)} kg · ${p.cg.weightKind}</dd></div>
+    <div><dt>IMC</dt><dd>${fmt(p.bmi,1)} kg/m²</dd></div>
+    <div><dt>Peso ideal</dt><dd>${fmt(p.ibw,1)} kg</dd></div>`;
+  const f=[];
+  if(p.obese)f.push(`<span class="tag-flag">Obesidade${p.bmi>=40?' grave':''} · seção 8.1</span>`);
+  if(p.arc)f.push('<span class="tag-flag">Hiperfiltração (ARC) · seção 8.2</span>');
+  if(p.low)f.push('<span class="tag-flag">ClCr &lt;25: dose por nível</span>');
+  if(p.age>=75||p.scr<0.6)f.push('<span class="tag-flag">Cockcroft-Gault menos confiável: considere ClCr medido</span>');
+  $('ptFlags').innerHTML=f.join('');
+}
+
+// ===== Tab 1: start =====
+function renderT1(p){
+  const out=$('out-t1');
+  if(!p.ok){out.innerHTML='<h2>Início da terapia</h2><p class="hint">Aguardando dados do paciente.</p>';return '';}
+  const ld=VE.loadingDose(p.w);
+  const CL=VE.popCL(p.clcr),V=VE.popV(p.w,p.h),ke=CL/V,th=Math.log(2)/ke;
+  // Padrão regional: a cada 12 h sem disfunção renal (ClCr ≥50); a cada 24 h com ClCr 25–49.
+  // Se a dose a cada 12 h passar de 2.000 mg (hiperfiltração), dividir a cada 8 h.
+  let tau=p.clcr>=50?12:24;
+  if(tau===12&&VE.regimen(target(),ke,V,12).dose>2000)tau=8;
+  const T=target();
+  let html=`<h2>Início da terapia</h2>
+   <div class="hero"><div><div class="lab">Dose de ataque</div><div class="num">${fmt(ld.dose)}</div><div class="unit">mg em ${ld.tinfMin} min · 25 mg/kg de peso real${ld.capped?' · limitado ao teto de 3.000 mg':''}</div></div></div>`;
+  let sumMaint='';
+  if(p.low||!tau){
+    html+=`<div class="rec warn"><strong class="big">Sem manutenção fixa</strong><p>ClCr &lt;25 mL/min ou LRA em evolução: após o ataque, colha nível aleatório em 24 h e redose quando &lt;20 mg/L. Se estiver em hemodiálise ou CRRT, use as abas 3 ou 4.</p></div>`;
+    sumMaint='Sem manutenção fixa (ClCr <25): nível em 24 h e redose quando <20 mg/L.';
+  } else {
+    const main=VE.regimen(T,ke,V,tau);
+    const rows=[8,12,24].map(t=>({t,r:VE.regimen(T,ke,V,t)}));
+    html+=`<div class="rec"><div class="lab" style="font-family:var(--display);font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)">Manutenção empírica sugerida</div>
+      <strong class="big">${mg(main.dose)} ${tauTxt(tau)}</strong>
+      <p>Infundir em ${fmt(main.tinf*60)} min. Primeira dose ${tau} h após o início do ataque. AUC24 estimada ${fmt(main.auc24)} mg·h/L (alvo ${T}).</p>
+      ${main.capped?'<p><b>Limitado ao teto de dose.</b></p>':''}
+      ${p.arc?'<p>Hiperfiltração: considere infusão contínua (aba 3) se a AUC não for atingida.</p>':''}</div>
+      <div class="kv">
+        <div><dt>CL vanco estimada</dt><dd>${fmt(CL,2)} L/h</dd></div>
+        <div><dt>Volume estimado</dt><dd>${fmt(V,0)} L</dd></div>
+        <div><dt>Meia-vida estimada</dt><dd>${fmt(th,1)} h</dd></div>
+        <div><dt>Dose diária</dt><dd>${fmt(main.dose*24/tau)} mg · ${fmt(main.dose*24/tau/p.w,1)} mg/kg</dd></div>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th>Intervalo</th><th>Dose</th><th>AUC24</th><th>Pico ss</th><th>Vale ss</th></tr></thead><tbody>
+      ${rows.map(({t,r})=>`<tr class="${t===tau?'sel':''}"><td>${tauTxt(t)}</td><td class="n">${mg(r.dose)}</td><td class="n">${fmt(r.auc24)}</td><td class="n">${fmt(r.cmax,1)}</td><td class="n">${fmt(r.cmin,1)}</td></tr>`).join('')}
+      </tbody></table></div>
+      <p class="hint">Estimativa populacional (Matzke 1984), só para a primeira prescrição; confirme com pico e vale. Valores ss = estado de equilíbrio previsto, em mg/L.</p>`;
+    // schedule
+    const t0=parseDT('ldTime');
+    if(isFinite(t0)){
+      const monIdx=tau===8?3:tau===12?2:1; // 1-based maintenance dose to monitor
+      const firstM=t0+tau*H;const mon=firstM+(monIdx-1)*tau*H;const tinfH=main.tinf;
+      const peak=mon+(tinfH+1)*H,trough=mon+tau*H-0.5*H;
+      html+=`<h3>Aprazamento</h3><ol class="sched">
+        <li>Ataque: ${clock(t0)} (fim ${clock(t0+ld.tinfMin*60e3)})</li>
+        <li>1ª manutenção: ${clock(firstM)}, depois ${tauTxt(tau)}</li>
+        <li><span class="peak-l">Pico</span>: ${clock(peak)} (1 h após o fim da ${monIdx}ª manutenção)</li>
+        <li><span class="trough-l">Vale</span>: ${clock(trough)} (antes da dose de ${clock(mon+tau*H)})</li></ol>`;
+    }
+    sumMaint=`Manutenção empírica: ${main.dose} mg ${tauTxt(tau)} (infusão ${fmt(main.tinf*60)} min); AUC24 estimada ${fmt(main.auc24)} (modelo populacional).`;
+  }
+  out.innerHTML=html;
+  return `VANCOMICINA — INÍCIO DE TERAPIA (VancoAUC)\nPaciente: ${p.sex}, ${p.age} a, ${p.w} kg, ${p.h} cm, IMC ${fmt(p.bmi,1)}; Cr ${p.scr} mg/dL; ClCr ${fmt(p.clcr)} mL/min (${p.clSrc}${p.clSrc==='Cockcroft-Gault'?', peso '+p.cg.weightKind:''}).\nAtaque: ${ld.dose} mg IV em ${ld.tinfMin} min (25 mg/kg peso real${ld.capped?', teto 3.000 mg':''}).\n${sumMaint}\nAlvo AUC24: ${T} mg·h/L. Colher pico e vale conforme POP.`;
+}
+
+// ===== chart =====
+function chartSVG({doses,ke,V,t1,c1,t2,c2,newReg,newStart,tStart,tEnd}){
+  const W=640,Hh=240,m={l:44,r:12,t:12,b:30};
+  const n=220,pts=[];let ymax=Math.max(c1,c2)*1.15;
+  const conc=t=>{let c=VE.concAt(doses,ke,V,t);if(newReg&&t>newStart){const k=Math.floor((t-newStart)/newReg.tau);for(let i=0;i<=k;i++)c+=VE.unitConc(newReg.dose,newStart+i*newReg.tau,newReg.tinf,ke,t)/V;}return c;};
+  for(let i=0;i<=n;i++){const t=tStart+(tEnd-tStart)*i/n;const c=conc(t);pts.push([t,c]);if(c>ymax)ymax=c;}
+  ymax=Math.ceil(ymax/10)*10;
+  const x=t=>m.l+(t-tStart)/(tEnd-tStart)*(W-m.l-m.r),y=c=>m.t+(1-c/ymax)*(Hh-m.t-m.b);
+  let g='';
+  for(let v=0;v<=ymax;v+=10){g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${m.l-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${v}</text>`;}
+  const span=tEnd-tStart;const step=span>72?24:12;
+  for(let t=Math.ceil(tStart/step)*step;t<=tEnd;t+=step){g+=`<text x="${x(t)}" y="${Hh-10}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${Math.round(t-tStart)} h</text>`;}
+  const past=pts.filter(p=>!newReg||p[0]<=newStart),fut=newReg?pts.filter(p=>p[0]>=newStart):[];
+  const path=a=>a.map((p,i)=>(i?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join(' ');
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Curva concentração-tempo estimada com os níveis medidos">${g}
+   <text x="${m.l}" y="${m.t+2}" font-size="11" fill="var(--muted)" dy="-1">mg/L</text>
+   <path d="${path(past)}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  if(fut.length)s+=`<path d="${path(fut)}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 4"/><line x1="${x(newStart)}" x2="${x(newStart)}" y1="${m.t}" y2="${Hh-m.b}" stroke="var(--muted)" stroke-dasharray="2 3"/>`;
+  s+=`<circle cx="${x(t1)}" cy="${y(c1)}" r="5.5" fill="var(--peak)" stroke="var(--surface)" stroke-width="2"/><circle cx="${x(t2)}" cy="${y(c2)}" r="5.5" fill="var(--trough)" stroke="var(--surface)" stroke-width="2"/></svg>`;
+  return `<div class="chart">${s}<div class="legend"><span><i style="background:var(--accent)"></i>curva ajustada aos níveis</span>${fut.length?'<span><i style="background:repeating-linear-gradient(90deg,var(--accent) 0 5px,transparent 5px 9px)"></i>novo regime previsto</span>':''}<span><i style="background:var(--peak);height:8px;width:8px;border-radius:50%"></i>pico medido</span><span><i style="background:var(--trough);height:8px;width:8px;border-radius:50%"></i>vale medido</span></div></div>`;
+}
+
+// ===== Tab 2: peak & trough =====
+function renderT2(p){
+  const out=$('out-t2');const T=target();
+  const dose=num('mDose'),tau=+$('mTau').value,tinf=num('mTinf')/60;
+  const monStart=parseDT('monStart'),t1ms=parseDT('t1'),t2ms=parseDT('t2'),ldStartMs=parseDT('ldStart');
+  const steady=$('steady').checked;
+  const c1=num('c1'),c2=num('c2');
+  if(![dose,tinf,monStart,t1ms,t2ms,c1,c2].every(isFinite)){out.innerHTML='<h2>AUC por pico e vale</h2><p class="hint">Preencha regime, horários e os dois níveis.</p>';return '';}
+  const ref=monStart;const h=ms=>(ms-ref)/H;
+  let t1=h(t1ms),t2=h(t2ms);const notes=[];
+  if(t2<0&&steady){t2+=tau;notes.push('Vale colhido antes da dose monitorada: tratado como vale do intervalo seguinte (estado de equilíbrio).');}
+  const doses=VE.buildDoses({monStart:0,dose,tau,tinf,nPrev:num('nPrev'),steady,ldDose:num('ldDose')||0,ldStart:h(ldStartMs),ldTinf:(num('ldTinf')||60)/60});
+  let r;
+  try{r=VE.twoLevel({doses,c1,t1,c2,t2});}
+  catch(e){out.innerHTML=`<h2>AUC por pico e vale</h2><div class="alert err"><b>Não foi possível calcular.</b> ${e.message}</div>`;return '';}
+  const aucCur=(dose*24/tau)/r.CL;const st=statusOf(aucCur);
+  const aki=$('aki').checked;
+  if(t2>tau+0.02)notes.push('Vale colhido depois do horário aprazado da próxima dose: só é válido se essa dose ainda não tinha sido iniciada.');
+  if(aucCur<300)notes.push('AUC abaixo de 300: confira horários de infusão e coleta, e se as amostras não foram trocadas, antes de aumentar a dose.');
+  const ssCur=VE.ss(dose,tau,tinf,r.ke,r.V);
+  // Mantém o intervalo atual se compatível com a meia-vida (0,5–2,5 t½); senão prefere 12 h (padrão), depois 8/24/48 h.
+  const fits=t=>{const q=t/r.th;return q>=0.5&&q<=2.5;};
+  let tauNew=fits(tau)?tau:fits(12)?12:(VE.chooseTau(r.ke)||48);
+  if(tauNew===12&&VE.regimen(T,r.ke,r.V,12).dose>2000)tauNew=8;
+  const rows=[8,12,24,48].map(t=>({t,r:VE.regimen(T,r.ke,r.V,t)}));
+  const pick=rows.find(x=>x.t===tauNew)||rows[1];const nr=pick.r;
+  // next scheduled dose after trough
+  const nextDose=tau; // relative to monitored dose start
+  const nowRel=Math.max(t2,0);
+  let action,cls='',holdH=0,restartRel=nextDose;
+  const curDaily=dose*24/tau,newDaily=nr.dose*24/nr.tau;
+  const verb=newDaily>curDaily+1?'Aumentar para':newDaily<curDaily-1?'Reduzir para':'Mudar para';
+  const same=nr.dose===dose&&nr.tau===tau;
+  if(aki){
+    const cNext=VE.concAt(doses,r.ke,r.V,nextDose);
+    holdH=cNext>nr.cmin?Math.log(cNext/nr.cmin)/r.ke:0;restartRel=nextDose+holdH;
+    action='Suspender a próxima dose (LRA nova)';cls='bad';
+  }
+  else if(aucCur>=400&&aucCur<=600){action='Manter o regime atual';cls='';}
+  else if(same){action=`Manter ${mg(dose)} ${tauTxt(tau)} (limite do arredondamento)`;cls='warn';}
+  else if(aucCur<=700){action=`${verb} ${mg(nr.dose)} ${tauTxt(nr.tau)}`;cls='warn';}
+  else{
+    // hold until concentration falls to predicted ss trough of new regimen
+    const cNext=VE.concAt(doses,r.ke,r.V,nextDose);
+    holdH=cNext>nr.cmin?Math.log(cNext/nr.cmin)/r.ke:0;
+    restartRel=nextDose+holdH;
+    action=`Suspender a próxima dose e reiniciar com ${mg(nr.dose)} ${tauTxt(nr.tau)}`;cls='bad';
+  }
+  const keep=!aki&&((aucCur>=400&&aucCur<=600)||same);
+  const restartMs=ref+restartRel*H;
+  const warn=[...notes,...r.warn];
+  if(r.th>20&&!keep)warn.push('Meia-vida longa: o efeito da mudança demora; repita níveis em 48–72 h.');
+  if(nr.capped)warn.push('Regime calculado atingiu o teto de dose (3.000 mg por dose ou 4.500 mg/dia). Discuta com a farmácia clínica.');
+  const tStart=Math.min(...doses.filter(d=>d.s>-tau*4).map(d=>d.s));
+  const chart=chartSVG({doses,ke:r.ke,V:r.V,t1,c1,t2,c2,newReg:keep?null:nr,newStart:restartRel,tStart,tEnd:restartRel+nr.tau*3});
+  out.innerHTML=`<h2>AUC por pico e vale</h2>
+   <div class="hero"><div><div class="lab">AUC24 do regime atual</div><div class="num">${fmt(aucCur)}</div><div class="unit">mg·h/L em estado de equilíbrio · ${mg(dose)} ${tauTxt(tau)}</div></div><span class="pill ${st.cls}">${st.txt}</span></div>
+   <div class="rec ${cls}"><strong class="big">${action}</strong>
+     ${aki?`<p>Função renal instável invalida a AUC extrapolada. Colha nível aleatório em 12–24 h e redose quando &lt;20 mg/L; rediscuta a indicação. Referência se a função renal estabilizar: ${mg(nr.dose)} ${tauTxt(nr.tau)}, a partir de ~${clock(restartMs)}.</p>`:keep?`<p>Próximos níveis conforme POP (mudança de creatinina, 48–72 h em UTI instável, ou semanal).</p>`:
+     `<p>Infundir em ${fmt(nr.tinf*60)} min. AUC24 prevista ${fmt(nr.auc24)} · pico ${fmt(nr.cmax,1)} · vale ${fmt(nr.cmin,1)} mg/L.</p>
+      <p>${holdH>0?`Reiniciar em <b>${clock(restartMs)}</b> (${fmt(holdH,1)} h após o horário da próxima dose), quando a concentração estimada cair a ~${fmt(nr.cmin,1)} mg/L.`:`Começar na próxima dose aprazada: <b>${clock(restartMs)}</b>.`} Repetir pico e vale em 24–48 h.</p>`}
+   </div>
+   <div class="kv">
+     <div><dt>ke</dt><dd>${fmt(r.ke,3)} h⁻¹</dd></div>
+     <div><dt>Meia-vida</dt><dd>${fmt(r.th,1)} h</dd></div>
+     <div><dt>Volume</dt><dd>${fmt(r.V,1)} L · ${p.ok?fmt(r.V/p.w,2):'—'} L/kg</dd></div>
+     <div><dt>Depuração</dt><dd>${fmt(r.CL,2)} L/h</dd></div>
+     <div><dt>Pico ss atual</dt><dd>${fmt(ssCur.cmax,1)} mg/L</dd></div>
+     <div><dt>Vale ss atual</dt><dd>${fmt(ssCur.cmin,1)} mg/L</dd></div>
+   </div>
+   ${warn.length?`<div class="alerts">${warn.map(w=>`<div class="alert">${w}</div>`).join('')}</div>`:''}
+   ${chart}
+   <h3>Opções de regime para AUC ${T}</h3>
+   <div class="tbl-wrap"><table><thead><tr><th>Intervalo</th><th>Dose</th><th>Infusão</th><th>AUC24</th><th>Pico ss</th><th>Vale ss</th></tr></thead><tbody>
+   ${rows.map(({t,r:x})=>`<tr class="${t===nr.tau&&!keep?'sel':''}"><td>${tauTxt(t)}</td><td class="n">${mg(x.dose)}</td><td class="n">${fmt(x.tinf*60)} min</td><td class="n">${fmt(x.auc24)}</td><td class="n">${fmt(x.cmax,1)}</td><td class="n">${fmt(x.cmin,1)}</td></tr>`).join('')}
+   </tbody></table></div>
+   <p class="hint">Linha destacada: intervalo sugerido. Mantém o atual se for compatível com a meia-vida; senão, prefere a cada 12 h (padrão), passando a cada 8 h se a dose por tomada exceder 2.000 mg. O volume é calculado com todas as doses registradas (ataque incluído), sem exigir estado de equilíbrio.</p>`;
+  return `VANCOMICINA — AUC POR PICO E VALE (VancoAUC)\nRegime: ${dose} mg ${tauTxt(tau)}, infusão ${fmt(tinf*60)} min. Dose monitorada: ${clock(monStart)}${steady?' (estado de equilíbrio)':`; ${num('nPrev')} doses prévias; ataque ${num('ldDose')||0} mg`}.\nPico ${c1} mg/L às ${clock(t1ms)}; vale ${c2} mg/L às ${clock(t2ms)}.\nke ${fmt(r.ke,3)} h-1; t1/2 ${fmt(r.th,1)} h; V ${fmt(r.V,1)} L; CL ${fmt(r.CL,2)} L/h.\nAUC24 regime atual: ${fmt(aucCur)} mg·h/L (${st.txt}).\nConduta sugerida: ${action}${keep?'':`; AUC24 prevista ${fmt(nr.auc24)}; início ${clock(restartMs)}`}.\n${warn.length?'Alertas: '+warn.join(' | '):''}`;
+}
+
+// ===== Tab 3: continuous infusion =====
+// Fit ke from one level after loading bolus + constant infusion, with population V (one-compartment).
+function ciFit(css,R,hrs,LD,V){
+  const conc=ke=>(LD/V)*Math.exp(-ke*hrs)+(R/(ke*V))*(1-Math.exp(-ke*hrs));
+  let lo=0.003,hi=1.5;
+  if(css>conc(lo)||css<conc(hi))return null;
+  for(let i=0;i<80;i++){const mid=(lo+hi)/2;if(conc(mid)>css)lo=mid;else hi=mid;}
+  const ke=(lo+hi)/2;return{ke,CL:ke*V,cssPlateau:R/(ke*V)};
+}
+function renderT3(p){
+  const out=$('out-t3');const T=target();const cssT=T/24;
+  if(!p.ok){out.innerHTML='<h2>Infusão contínua</h2><p class="hint">Aguardando dados do paciente.</p>';return '';}
+  const ind=$('ciInd').value,eff=num('eff'),conc=num('ciConc')||5;
+  const ld=VE.loadingDose(p.w,ind==='crrt'&&eff>35?30:25);
+  let mgkg,basis;
+  if(ind==='crrt'){mgkg=!isFinite(eff)?15:eff<=25?15:eff<=35?20:25;basis=`CRRT com efluente ${isFinite(eff)?eff:'?'} mL/kg/h → ${mgkg} mg/kg/dia (regra operacional do POP)`;}
+  else{const CL=VE.popCL(p.clcr);const d=Math.max(T*CL,30*p.w);mgkg=d/p.w;basis=`Maior valor entre a estimativa populacional pelo ClCr (${fmt(p.clcr)} mL/min) e 30 mg/kg/dia`;}
+  let daily=Math.min(VE.round(mgkg*p.w,250),4500);
+  let html=`<h2>Infusão contínua</h2>
+    <div class="hero"><div><div class="lab">Ataque</div><div class="num">${fmt(ld.dose)}</div><div class="unit">mg em ${ld.tinfMin} min; iniciar a infusão ao fim do ataque</div></div>
+    <div><div class="lab">Dose diária inicial</div><div class="num">${fmt(daily)}</div><div class="unit">mg/24 h · ${fmt(daily/conc/24,1)} mL/h a ${conc} mg/mL</div></div></div>
+    <p class="hint">${basis}. Teto de 4.500 mg/dia. Alvo de Css ${fmt(cssT,1)} mg/L (AUC24 ${T}); aceitável 17–25 mg/L. Primeira Css com ≥24 h de infusão.</p>`;
+  let sum=`VANCOMICINA — INFUSÃO CONTÍNUA (VancoAUC)\nIndicação: ${ind==='crrt'?'CRRT, efluente '+eff+' mL/kg/h':ind==='arc'?'hiperfiltração (ARC)':'outra'}.\nAtaque ${ld.dose} mg em ${ld.tinfMin} min; manutenção inicial ${daily} mg/24 h (${fmt(daily/conc/24,1)} mL/h a ${conc} mg/mL).`;
+  const cur=num('ciDaily'),css=num('ciCss'),hrs=num('ciHours'),ldGiven=isFinite(num('ciLd'))?num('ciLd'):0;
+  if(isFinite(css)&&isFinite(cur)&&css>0&&cur>0){
+    const V=VE.popV(p.w,p.h);const R=cur/24;
+    const fit=isFinite(hrs)&&hrs>0?ciFit(css,R,hrs,ldGiven,V):null;
+    const notes=[];
+    let plateau,CLest;
+    if(fit){plateau=fit.cssPlateau;CLest=fit.CL;}
+    else{plateau=css;CLest=R/css;notes.push('Não foi possível descontar o ataque com os dados informados; o cálculo tratou o nível como platô.');}
+    if(isFinite(hrs)&&hrs<24)notes.push('Menos de 24 h de infusão: o nível ainda sofre efeito do ataque, e a correção depende do volume assumido ('+fmt(V,0)+' L). Prefira repetir com ≥24 h.');
+    const auc=plateau*24;const st=statusOf(auc);
+    const nd=Math.min(VE.round(T*CLest,250),4500);
+    let action,cls='';
+    if(css>30){action='Suspender a infusão, repetir nível em 6 h e reiniciar quando ≤25 mg/L';cls='bad';}
+    else if(auc>=400&&auc<=600){action='Manter a taxa atual';}
+    else if(nd===cur){action=`Manter ${fmt(cur)} mg/24 h (limite de dose ou arredondamento)`;cls='warn';}
+    else{action=`${nd>cur?'Aumentar':'Reduzir'} para ${fmt(nd)} mg/24 h`;cls='warn';}
+    if(nd>=4500&&auc<400)notes.push('Dose no teto de 4.500 mg/dia sem atingir o alvo: discuta com farmácia clínica e infectologia.');
+    html+=`<h3>Ajuste pelo nível</h3>
+     <div class="hero"><div><div class="lab">AUC24 em platô prevista</div><div class="num">${fmt(auc)}</div><div class="unit">mg·h/L · Css medida ${fmt(css,1)} → platô previsto ${fmt(plateau,1)} mg/L</div></div><span class="pill ${st.cls}">${st.txt}</span></div>
+     <div class="rec ${cls}"><strong class="big">${action}</strong>
+     ${css>30?`<p>Nova taxa ao reiniciar: ${fmt(nd)} mg/24 h (${fmt(nd/conc/24,1)} mL/h).</p>`:(auc>=400&&auc<=600?'<p>Repetir Css em 48–72 h, ou antes se mudar o efluente, parar o filtro >6 h ou variar a função renal.</p>':`<p>${fmt(nd/conc/24,1)} mL/h a ${conc} mg/mL. Nova Css em 24 h.</p>`)}
+     </div>
+     <div class="kv"><div><dt>CL estimada</dt><dd>${fmt(CLest,2)} L/h</dd></div><div><dt>Volume assumido</dt><dd>${fmt(V,0)} L</dd></div><div><dt>Meia-vida estimada</dt><dd>${fmt(Math.log(2)*V/CLest,1)} h</dd></div></div>
+     ${notes.length?`<div class="alerts">${notes.map(n=>`<div class="alert">${n}</div>`).join('')}</div>`:''}
+     <p class="hint">O cálculo desconta o ataque informado e usa volume populacional (0,7 L/kg; 0,52 L/kg se IMC ≥40).</p>`;
+    sum+=`\nCss ${css} mg/L após ${isFinite(hrs)?hrs:'?'} h com ${cur} mg/24 h (ataque ${ldGiven} mg) → platô previsto ${fmt(plateau,1)} mg/L, AUC24 ${fmt(auc)}. Conduta: ${action}.${notes.length?' Alertas: '+notes.join(' | '):''}`;
+  }
+  out.innerHTML=html;return sum;
+}
+
+// ===== Tab 4: hemodialysis =====
+function renderT4(p){
+  const out=$('out-t4');
+  if(!p.ok){out.innerHTML='<h2>Hemodiálise intermitente</h2><p class="hint">Aguardando dados do paciente.</p>';return '';}
+  const ld=VE.loadingDose(p.w);const gap=+$('hdGap').value;const f72=gap===72?1.3:1;
+  const base=VE.round(p.w*10*f72,250);
+  let html=`<h2>Hemodiálise intermitente</h2>
+   <div class="hero"><div><div class="lab">Ataque</div><div class="num">${fmt(ld.dose)}</div><div class="unit">mg em ${ld.tinfMin} min · 25 mg/kg</div></div>
+   <div><div class="lab">Manutenção inicial por sessão</div><div class="num">${fmt(base)}</div><div class="unit">mg · 10 mg/kg${gap===72?' + 30% (intervalo de 72 h)':''}</div></div></div>
+   <p class="hint">Dose na última hora da sessão ou logo após. Nível pré-diálise antes da 2ª sessão; alvo operacional 15–20 mg/L.</p>`;
+  let sum=`VANCOMICINA — HEMODIÁLISE (VancoAUC)\nAtaque ${ld.dose} mg; manutenção inicial ${base} mg por sessão${gap===72?' (intervalo 72 h)':''}.`;
+  const lvl=num('hdLevel'),cur=num('hdCur');
+  if(isFinite(lvl)&&lvl>0){
+    const doseRef=isFinite(cur)&&cur>0?cur:VE.round(p.w*10,250);
+    let factor,action,cls='warn',st;
+    if(lvl>25){factor=0;action='Não dar a dose desta sessão';cls='bad';st={cls:'bad',txt:'Acima de 25 mg/L'};}
+    else if(lvl>20){factor=0.75;st={cls:'warn',txt:'Acima do alvo'};}
+    else if(lvl>=15){factor=1;cls='';st={cls:'ok',txt:'No alvo 15–20'};}
+    else if(lvl>=10){factor=1.25;st={cls:'warn',txt:'Abaixo do alvo'};}
+    else{factor=1.5;st={cls:'warn',txt:'Muito abaixo do alvo'};}
+    const nd=factor?Math.min(VE.round(doseRef*factor*f72,250),3000):0;
+    if(factor)action=nd===doseRef?`Manter ${fmt(doseRef)} mg nesta sessão`:`${nd>doseRef?'Aumentar':'Reduzir'} para ${fmt(nd)} mg nesta sessão`;
+    html+=`<h3>Ajuste pelo nível pré-diálise</h3>
+     <div class="hero"><div><div class="lab">Nível pré-diálise</div><div class="num">${fmt(lvl,1)}</div><div class="unit">mg/L</div></div><span class="pill ${st.cls}">${st.txt}</span></div>
+     <div class="rec ${cls}"><strong class="big">${action}</strong>
+     <p>${lvl>25?'Repetir o nível antes da próxima sessão e retomar com dose 25% menor.':`Faixas do POP: &lt;10 → +50%; 10–14,9 → +25%; 15–20 → manter; 20,1–25 → −25%; &gt;25 → suspender a dose.${gap===72?' Inclui +30% pelo intervalo de 72 h.':''} Repetir nível pré-diálise na próxima sessão.`}</p></div>
+     <p class="hint">Regra operacional do POP, sem validação prospectiva. Na primeira semana o nível reflete em boa parte o ataque; ajuste com cautela e repita.</p>`;
+    sum+=`\nNível pré-diálise ${lvl} mg/L com ${doseRef} mg/sessão. Conduta: ${action}.`;
+  }
+  out.innerHTML=html;return sum;
+}
+
+// ===== orchestration =====
+let current='t1';
+function render(){
+  const p=patient();renderPatient(p);
+  const s={t1:renderT1,t2:renderT2,t3:renderT3,t4:renderT4}[current](p);
+  $('summary').value=s?s+`\nCalculado em ${clock(Date.now())}. Ferramenta de apoio; conferir com farmácia clínica.`:'';
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  current=b.dataset.tab;
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));
+  ['t1','t2','t3','t4'].forEach(t=>{$('in-'+t).hidden=t!==current;$('out-'+t).hidden=t!==current;});
+  render();
+}));
+document.addEventListener('input',e=>{if(e.target.matches('input,select')){$('exTag').hidden=true;render();}});
+document.addEventListener('change',e=>{if(e.target.matches('input,select'))render();});
+$('clearBtn').addEventListener('click',()=>{
+  document.querySelectorAll('input').forEach(i=>{if(i.id==='target'||i.id==='ciConc'||i.id==='mTinf'||i.id==='ldTinf')return;if(i.type==='checkbox')i.checked=false;else i.value='';});
+  $('exTag').hidden=true;render();
+});
+$('copyBtn').addEventListener('click',()=>{
+  const t=$('summary').value;const done=()=>{$('copyMsg').textContent='Copiado';setTimeout(()=>$('copyMsg').textContent='',2000);};
+  try{navigator.clipboard.writeText(t).then(done).catch(()=>{$('summary').select();$('copyMsg').textContent='Texto selecionado: use Ctrl/Cmd+C';});}
+  catch(e){$('summary').select();$('copyMsg').textContent='Texto selecionado: use Ctrl/Cmd+C';}
+});
+render();
+</script>
+
+</body></html>
